@@ -1,7 +1,8 @@
 # SQUID-tutorial
 
 Learn how to use SQUID(http://www.hpc.cmc.osaka-u.ac.jp/squid/) step by step
-Resources
+
+Resources  
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/  
 http://www.hpc.cmc.osaka-u.ac.jp/wp-content/uploads/2021/05/SQUID_user_manual.pdf
 
@@ -13,6 +14,11 @@ http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/login/
 ssh u*****@squidhpc.hpc.cmc.osaka-u.ac.jp
 ```
 
+local マシンの~/.ssh/config を以下のように設定すると  
+`ssh squid`
+
+で接続できるようになります(2 要素認証・パスワードの入力は毎回必要)、VSCode からも飛べるようになります
+
 ```
 Host squid
   HostName squidhpc.hpc.cmc.osaka-u.ac.jp
@@ -20,6 +26,8 @@ Host squid
   ServerAliveInterval 60
   ServerAliveCountMax 3
 ```
+
+squid で以下の設定を追加
 
 ```
 # check your user/group id
@@ -46,7 +54,7 @@ nvidia-smi
 
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/
 
-http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobclass/
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobclass/  
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/#q
 
 ```
