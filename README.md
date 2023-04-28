@@ -46,6 +46,9 @@ nvidia-smi
 
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/
 
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobclass/
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/#q
+
 ```
 qsub --group $GROUP_ID nqs.sh
 ```
@@ -76,12 +79,54 @@ conda activate torch-env
 python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
 ```
 
-## singularity
+## Singularity
 
 http://www.hpc.cmc.osaka-u.ac.jp/lec_ws/20230126/
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/
 https://docs.sylabs.io/guides/3.7/user-guide/index.html
 
 ```
+mkdir /sqfs/work//$GROUP_ID/$USER_ID/singularity_cache
+echo "export SINGULARITY_CACHEDIR=/sqfs/work//$GROUP_ID/$USER_ID/singularity_cache" >> ~/.bashrc
+source ~/.bashrc
+# https://ngc.nvidia.com/setup/installers/cli
+# https://ngc.nvidia.com/setup/api-key
+echo "export SINGULARITY_DOCKER_USERNAME=$oauthtoken" >> ~/.bashrc
+echo "export SINGULARITY_DOCKER_PASSWORD=<API Key> " >> ~/.bashrc
+source ~/.bashrc
+
+mkdir /sqfs/work/$GROUP_ID/$USER_ID/sif_images
+singularity build /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif docker://nvcr.io/nvidia/pytorch:23.04-py3
+# 動作確認, --nvが必要な時について調査
+singularity shell --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif
+singularity run --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
+```
+
+### Singularity イメージのカスタマイズ
+
+#### sandbox から環境作成
 
 ```
+cd /sqfs/work/$GROUP_ID/$USER_ID/sif_images
+# TODO: なんのための処理
+newgrp $GROUP_ID
+singularity build -f --sandbox --fix-perms mypytorch pytorch.sif
+singularity run --nv -f -w mypytorch python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
+# 色々インストール
+pip install
+
+# 環境書き出し
+singularity build -f mypytorch.sif mypytorch
+```
+
+#### def ファイルから環境作成
+
+TODO
+
+### batch job で実行
+
+TODO
+
+### batch job で実行(multi node)
+
+TODO
