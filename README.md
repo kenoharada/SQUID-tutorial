@@ -58,7 +58,7 @@ http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobclass/
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/#q
 
 ```
-qsub --group $GROUP_ID nqs.sh
+qsub --group=$GROUP_ID nqs.sh
 ```
 
 ## conda
@@ -93,6 +93,10 @@ http://www.hpc.cmc.osaka-u.ac.jp/lec_ws/20230126/
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/  
 https://docs.sylabs.io/guides/3.7/user-guide/index.html
 
+注意  
+By default, SingularityCE bind mounts /home/$USER, /tmp, and $PWD into your container at runtime.  
+https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#working-with-files
+
 ```
 mkdir /sqfs/work//$GROUP_ID/$USER_ID/singularity_cache
 echo "export SINGULARITY_CACHEDIR=/sqfs/work//$GROUP_ID/$USER_ID/singularity_cache" >> ~/.bashrc
@@ -104,20 +108,27 @@ echo "export SINGULARITY_DOCKER_PASSWORD=<API Key> " >> ~/.bashrc
 source ~/.bashrc
 
 mkdir /sqfs/work/$GROUP_ID/$USER_ID/sif_images
+# pytorchのversionについて: https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
 singularity build /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif docker://nvcr.io/nvidia/pytorch:23.04-py3
-# 動作確認, --nvが必要な時について調査
+# 動作確認
+# --nvの意味: https://docs.sylabs.io/guides/latest/user-guide/gpu.html#nvidia-gpus-cuda-legacy
 singularity shell --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif
 singularity run --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
 ```
 
 ### Singularity イメージのカスタマイズ
 
+基本は interactive job に入って sandbox を使用して環境作ってみて動作確認 →.sif 化する、install の手順を def に書き換える、みたいな感じか
+
 #### sandbox から環境作成
+
+https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#sandbox-directories
 
 ```
 cd /sqfs/work/$GROUP_ID/$USER_ID/sif_images
 # TODO: なんのための処理
 newgrp $GROUP_ID
+# singularity help build
 singularity build -f --sandbox --fix-perms mypytorch pytorch.sif
 singularity run --nv -f -w mypytorch python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
 # 色々インストール
@@ -129,11 +140,29 @@ singularity build -f mypytorch.sif mypytorch
 
 #### def ファイルから環境作成
 
-TODO
+https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#singularityce-definition-files  
+https://docs.sylabs.io/guides/latest/user-guide/definition_files.html#definition-files  
+https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#working-with-files  
+https://docs.sylabs.io/guides/latest/user-guide/definition_files.html#best-practices-for-build-recipes
+
+```
+newgrp $GROUP_ID
+singularity build -f /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif custom_env.def
+singularity shell /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif
+singularity run /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif python
+singularity run /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
+singularity run --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
+
+singularity run /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif python torch_test.py
+singularity run --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif python torch_test.py
+```
 
 ### batch job で実行
 
-TODO
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/  
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/#q  
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/scheduler/  
+qsub --group=$GROUP_ID job.sh
 
 ### batch job で実行(multi node)
 
