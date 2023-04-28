@@ -161,8 +161,11 @@ singularity run --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/custom_env.sif pyt
 
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/  
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/jobscript/#q  
-http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/scheduler/  
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/scheduler/
+
+```
 qsub --group=$GROUP_ID job.sh
+```
 
 ### batch job で実行(multi node)
 
