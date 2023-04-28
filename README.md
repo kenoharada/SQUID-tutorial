@@ -89,8 +89,8 @@ python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.devi
 
 ## Singularity
 
-http://www.hpc.cmc.osaka-u.ac.jp/lec_ws/20230126/
-http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/
+http://www.hpc.cmc.osaka-u.ac.jp/lec_ws/20230126/  
+http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/  
 https://docs.sylabs.io/guides/3.7/user-guide/index.html
 
 ```
