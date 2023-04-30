@@ -98,7 +98,7 @@ By default, SingularityCE bind mounts /home/$USER, /tmp, and $PWD into your cont
 https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#working-with-files
 
 ```
-mkdir /sqfs/work//$GROUP_ID/$USER_ID/singularity_cache
+mkdir /sqfs/work/$GROUP_ID/$USER_ID/singularity_cache
 echo "export SINGULARITY_CACHEDIR=/sqfs/work//$GROUP_ID/$USER_ID/singularity_cache" >> ~/.bashrc
 source ~/.bashrc
 # https://ngc.nvidia.com/setup/installers/cli
