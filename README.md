@@ -130,9 +130,9 @@ cd /sqfs/work/$GROUP_ID/$USER_ID/sif_images
 newgrp $GROUP_ID
 # singularity help build
 singularity build -f --sandbox --fix-perms mypytorch pytorch.sif
-singularity run --nv -f -w mypytorch python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.device_count())"
+singularity run -f -w mypytorch
 # 色々インストール
-pip install
+pip install wandb
 
 # 環境書き出し
 singularity build -f mypytorch.sif mypytorch
