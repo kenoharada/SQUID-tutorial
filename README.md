@@ -90,6 +90,7 @@ python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.devi
 ## Singularity
 
 http://www.hpc.cmc.osaka-u.ac.jp/lec_ws/20230126/  
+http://www.hpc.cmc.osaka-u.ac.jp/wp-content/uploads/2023/01/%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A%E5%85%A5%E9%96%80%E8%AC%9B%E7%BF%92%E4%BC%9A.pdf  
 http://www.hpc.cmc.osaka-u.ac.jp/system/manual/squid-use/singularity/  
 https://docs.sylabs.io/guides/3.7/user-guide/index.html
 
@@ -118,7 +119,7 @@ singularity run --nv /sqfs/work/$GROUP_ID/$USER_ID/sif_images/pytorch.sif python
 
 ### Singularity イメージのカスタマイズ
 
-基本は interactive job に入って sandbox を使用して環境作ってみて動作確認 →.sif 化する、install の手順を def に書き換える、みたいな感じか
+基本は login node に入って sandbox を使用して環境作ってみて動作確認 →.sif 化する、install の手順を def に書き換える、みたいな感じか
 
 #### sandbox から環境作成
 
